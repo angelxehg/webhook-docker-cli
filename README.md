@@ -1,32 +1,45 @@
-[Webhook](https://github.com/adnanh/webhook/) Dockerized
+Dockerized [Webhook](https://github.com/adnanh/webhook/) + Docker CLI (meant for use with remote docker or Docker Socket Proxy)
 =================
 
-## Running webhook in Docker
-The simplest usage of [almir/webhook](https://hub.docker.com/r/almir/webhook/) image is for one to host the hooks JSON file on their machine and mount the directory in which those are kept as a volume to the Docker container:
+## What is the use of this image?
+
+My use case is triggering Docker commands via a webhook, but keeping the Docker Socket isolated. [Webhook](https://github.com/adnanh/webhook/) provides a reliable way to create the webhook. So we just need to bundle it with Docker CLI, and mount the Docker Socket (or a Proxy). This image is based on [almir/docker-webhook](https://github.com/almir/docker-webhook), I'm just adding the Docker CLI.
+
+If your use case is this simple, and you don't need anything other than Webhook and the Docker CLI, feel free to use this image!
+
+## Usage
+
+TODO: Document usage, along with [Docker Socket Proxy](https://hub.docker.com/r/tecnativa/docker-socket-proxy)
+
+## Development
+
+Clone this repository:
+
 ```shell
-docker run -d -p 9000:9000 -v /dir/to/hooks/on/host:/etc/webhook --name=webhook \
-  almir/webhook -verbose -hooks=/etc/webhook/hooks.json -hotreload
+git clone https://github.com/angelxehg/webhook-docker-cli -b main
 ```
 
-Another method of using this Docker image is to create a simple `Dockerfile`:
-```docker
-FROM almir/webhook
-COPY hooks.json.example /etc/webhook/hooks.json
-```
+Build the image:
 
-This `Dockerfile` and `hooks.json.example` files should be placed inside the same directory. After that run `docker build -t my-webhook-image .` and then start your container:
 ```shell
-docker run -d -p 9000:9000 --name=webhook my-webhook-image -verbose -hooks=/etc/webhook/hooks.json -hotreload
+docker build -t webhook-docker-cli .
 ```
 
-Additionally, one can specify the parameters to be passed to [webhook](https://github.com/adnanh/webhook/) in `Dockerfile` simply by adding one more line to the previous example:
-```docker
-FROM almir/webhook
-COPY hooks.json.example /etc/webhook/hooks.json
-CMD ["-verbose", "-hooks=/etc/webhook/hooks.json", "-hotreload"]
-```
+Try with the docker socket directly:
 
-Now, after building your Docker image with `docker build -t my-webhook-image .`, you can start your container by running just:
 ```shell
-docker run -d -p 9000:9000 --name=webhook my-webhook-image
+docker run --rm -it \
+  --user=0 \
+  -p 9000:9000 \
+  -v ./examples/hooks.json:/etc/webhook/hooks.json \
+  -v ./examples/docker_command.sh:/etc/webhook/docker_command.sh \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  webhook-docker-cli \
+  --verbose
+```
+
+Now you can hit it with curl:
+
+```shell
+curl -X POST http://localhost:9000/hooks/docker-command
 ```

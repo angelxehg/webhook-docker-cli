@@ -1,0 +1,8 @@
+[
+  {
+    "id": "docker-command",
+    "execute-command": "/etc/webhook/docker_command.sh",
+    "command-working-directory": "/etc/webhook",
+    "include-command-output-in-response": true
+  }
+]
