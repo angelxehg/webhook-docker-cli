@@ -49,7 +49,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            angelxehg/webhook-docker-cli
+            ghcr.io/angelxehg/webhook-docker-cli
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
