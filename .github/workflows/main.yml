@@ -64,7 +64,7 @@ jobs:
             linux/amd64
             linux/arm/v6
             linux/arm/v7
-            # linux/arm64 # Not supported by docker:28.5.2-cli-alpine3.22
+          # linux/arm64 not supported by docker:28.5.2-cli-alpine3.22
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta_webhook_docker.outputs.tags }}
           labels: ${{ steps.meta_webhook_docker.outputs.labels }}
