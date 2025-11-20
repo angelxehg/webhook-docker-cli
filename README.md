@@ -5,7 +5,7 @@ Dockerized [Webhook](https://github.com/adnanh/webhook/) + Docker CLI (meant for
 
 My use case is triggering Docker commands via a webhook, but keeping the Docker Socket isolated. [Webhook](https://github.com/adnanh/webhook/) provides a reliable way to create the webhook. So we just need to bundle it with Docker CLI, and mount the Docker Socket (or a Proxy). This image is based on [almir/docker-webhook](https://github.com/almir/docker-webhook), I'm just adding the Docker CLI.
 
-If your use case is this simple, and you don't need anything other than Webhook and the Docker CLI, feel free to use this image!
+Additional to the Docker CLI, this image includes `nc`, `curl` and `jq`, which are very useful when automating Docker commands and making callbacks. If your use case is this simple, feel free to use this image!
 
 ## Usage
 
