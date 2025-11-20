@@ -11,6 +11,25 @@ If your use case is this simple, and you don't need anything other than Webhook 
 
 TODO: Document usage, along with [Docker Socket Proxy](https://hub.docker.com/r/tecnativa/docker-socket-proxy)
 
+Try with the docker socket directly:
+
+```shell
+docker run --rm -it \
+  --user=0 \
+  -p 9000:9000 \
+  -v ./examples/hooks.json:/etc/webhook/hooks.json \
+  -v ./examples/docker_command.sh:/etc/webhook/docker_command.sh \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  ghcr.io/angelxehg/webhook-docker-cli:main \
+  --verbose
+```
+
+Now you can hit it with curl:
+
+```shell
+curl -X POST http://localhost:9000/hooks/docker-command
+```
+
 ## Development
 
 Clone this repository:

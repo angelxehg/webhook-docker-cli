@@ -10,7 +10,7 @@ RUN         go mod download
 RUN         CGO_ENABLED=0 go build -ldflags="-s -w" -o /usr/local/bin/webhook
 
 FROM        docker:29.0.2-cli-alpine3.22
-RUN         apk --no-cache add ca-certificates tzdata && \
+RUN         apk --no-cache add ca-certificates tzdata curl && \
             addgroup -g 1000 webhook && \
             adduser -D -s /bin/sh -u 1000 -G webhook webhook
 COPY        --from=build /usr/local/bin/webhook /usr/local/bin/webhook
